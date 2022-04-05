@@ -1,10 +1,9 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Accordion, Badge, Button, Card } from "react-bootstrap";
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { Link } from "react-router-dom";
 import MainScreen from "../../components/MainScreen";
-import notes from "../../data/notes";
-import Notes from "../../data/notes";
+import axios from 'axios'
 
 
 
@@ -23,11 +22,31 @@ function CustomToggle({ children, eventKey }) {
     );
   }
 
-const MyNotes = () => {
+
+
+
+  const MyNotes = () => {
+
+
+    const [notes,setNotes] = useState([])
+
+    const fetchNote = async()=>{
+      const {data} = await axios.get("/api/notes");
+      setNotes(data);
+
+    }
+
+    useEffect(() => {
+      fetchNote()
+    }, [])
+    
+
   const deleteHandler = () => {
     if (window.confirm("Are you sure?")) {
     }
   };
+
+
 
 
 
@@ -39,7 +58,7 @@ const MyNotes = () => {
         </Button>
       </Link>
       {notes.map((note) => (
-        <Accordion>
+        <Accordion key={note._id}>
           <Card style={{ margin: 10 }}>
             <Card.Header style={{ display: "flex" }}>
               <span
